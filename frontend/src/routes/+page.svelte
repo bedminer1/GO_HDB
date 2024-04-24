@@ -2,7 +2,9 @@
 	import { superForm } from 'sveltekit-superforms'
 
 	export let data
-	const { form, enhance } = superForm(data.form)
+	const { form, enhance } = superForm(data.form, {
+		resetForm: false,
+	})
 
 	console.log(data.records)
 </script>

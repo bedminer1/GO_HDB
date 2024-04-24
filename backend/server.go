@@ -13,6 +13,6 @@ func main() {
 		return c.JSON(200, convert.CsvToArray(c.QueryParam("town"), c.QueryParam("flat_type"), c.QueryParam("price")))
 	})
 
-	fmt.Println("Server started on port 8000")
-	e.Logger.Fatal(e.Start("localhost:8000"))
+	fmt.Println("Server started on port 8080")
+	e.Logger.Fatal(e.Start(":8080"))
 }

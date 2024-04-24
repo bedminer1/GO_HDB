@@ -16,7 +16,7 @@ export const load = async ({ fetch }) => {
     const form = await superValidate(zod(schema))
 
     try {
-        const response = await fetch("http://localhost:8000/2017/records", { mode: 'no-cors' })
+        const response = await fetch(`http://127.0.0.1:8080/2017/records?town=${form.data.town}&flat_type=${form.data.flatType}&price=${form.data.price}`)
         const records = await response.json()
 
         return {
