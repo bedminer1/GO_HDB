@@ -7,3 +7,12 @@ declare namespace App {
 	// interface Error {}
 	// interface Platform {}
 }
+
+interface HDBRecord {
+	month: string
+    town: string
+    flatType: string
+    leaseStart: string
+    remainingLease: string
+    price: number
+}
