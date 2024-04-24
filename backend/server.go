@@ -8,7 +8,7 @@ import (
 func main() {
 	e := echo.New()
 	e.GET("/2017/records", func(c echo.Context) error {
-		return c.JSON(200, convert.CsvToArray(c.QueryParam("town")))
+		return c.JSON(200, convert.CsvToArray(c.QueryParam("town"), c.QueryParam("flat_type"), c.QueryParam("price")))
 	})
 
 	e.Logger.Info("Server started on port 8080")
