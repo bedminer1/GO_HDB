@@ -12,7 +12,6 @@ type HDBRecord struct {
 	Month string `json:"month"`
 	Town string `json:"town"`
 	FlatType string `json:"flat_type"`
-	Block string `json:"block"`
 	LeaseStart string `json:"lease_start"`
 	RemainingLease string `json:"remaining_lease"`
 	Price int `json:"price"`
@@ -32,8 +31,6 @@ func createRecordList(data [][]string, townFilter string, flatTypeFilter string,
 					rec.Town = field
 				case 2: 
 					rec.FlatType = field
-				case 3:
-					rec.Block = field
 				case 8:
 					rec.LeaseStart = field
 				case 9:
@@ -71,7 +68,6 @@ func CsvToArray(townFilter string, flatTypeFilter string, priceFilter string) []
 	// close file at the end
 	defer f.Close()
 
-
 	// read csv file
 	csvReader := csv.NewReader(f)
 	data, err := csvReader.ReadAll()
@@ -83,7 +79,6 @@ func CsvToArray(townFilter string, flatTypeFilter string, priceFilter string) []
 	priceNumFilter, _ := strconv.Atoi(priceFilter)
 	fixedFlatTypeFilter := strings.Replace(flatTypeFilter, "+", " ", -1)
 	fixedTownFilter := strings.Replace(townFilter, "+", " ", -1)
-	fmt.Println(priceNumFilter, fixedTownFilter, fixedFlatTypeFilter)
 
 	// convert to arr
 	recordList := createRecordList(data, fixedTownFilter, fixedFlatTypeFilter, priceNumFilter)
