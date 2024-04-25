@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms'
-	import { Paginator, ProgressBar } from '@skeletonlabs/skeleton'
+	import { Paginator } from '@skeletonlabs/skeleton'
     import type { PaginationSettings } from '@skeletonlabs/skeleton'
+	import BarChart from '$lib/components/BarChart.svelte'
 
 	export let data
 	const { form: sf, enhance, reset, capture, restore, message, errors } = superForm(data.form, {
@@ -16,7 +17,6 @@
 		if (form) {
 			records = form.records!
 			info = form.info!
-			console.log(records)
 		}
 	} 
 
@@ -35,12 +35,24 @@
         paginationSettings.page * paginationSettings.limit + paginationSettings.limit
     );
 
-
+	// CHART
+	$: meanData = {
+		labels: [],
+		datasets: [{
+			label: "Annual Mean",
+			data: [],
+			borderWidth: 1,
+            backgroundColor: '#DCC7EA',
+		}],
+	}
 </script>
 
 <div class="w-full h-screen flex justify-center flex-col gap-4 items-center">
 	<!-- <button on:click={() => console.log(form?.records)}>l</button> -->
 	<p>{JSON.stringify(info)}</p>
+	<div>
+		<BarChart data={meanData} />
+	</div>
 	<form method="POST" action="?/query" use:enhance>
 		<label>
 			<span></span>

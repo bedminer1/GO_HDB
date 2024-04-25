@@ -18,3 +18,13 @@ interface HDBRecord {
 }
 
 type Info = Map<string, number[]>
+
+interface dataSet {
+    labels: string[];
+    datasets: {
+        label: string;
+        data: number[];
+        borderWidth: number;
+        backgroundColor: string;
+    }[];
+}
