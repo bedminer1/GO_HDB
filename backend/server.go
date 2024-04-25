@@ -10,7 +10,15 @@ import (
 func main() {
 	e := echo.New()
 	e.GET("/2017/records", func(c echo.Context) error {
-		return c.JSON(200, convert.CsvToArray(c.QueryParam("town"), c.QueryParam("flat_type"), c.QueryParam("price")))
+		// save query params in options struct
+		options := convert.FilterOptions {
+			TownFilter: c.QueryParam("town"),
+			FlatTypeFilter: c.QueryParam("flat_type"),
+			PriceFilter: c.QueryParam("price"),
+		}
+
+		// return json with converted csv data
+		return c.JSON(200, convert.CsvToJSON(options))
 	})
 
 	fmt.Println("Server started on port 8080")

@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -17,7 +18,19 @@ type HDBRecord struct {
 	Price int `json:"price"`
 }
 
-func CsvToArray(townFilter string, flatTypeFilter string, priceFilter string) []HDBRecord {
+type FilterOptions struct {
+	TownFilter string
+	FlatTypeFilter string
+	PriceFilter string
+}
+
+type fixedFilterOptions struct {
+	TownFilter string
+	FlatTypeFilter string
+	PriceFilter int
+}
+
+func CsvToJSON(options FilterOptions) []HDBRecord {
 	// open file
 	f, err := os.Open("convert/input/2017data.csv")
 	if err != nil {
@@ -35,23 +48,28 @@ func CsvToArray(townFilter string, flatTypeFilter string, priceFilter string) []
 	}
 	
 	// fix filters
-	priceNumFilter, _ := strconv.Atoi(priceFilter)
-	fixedFlatTypeFilter := strings.Replace(flatTypeFilter, "+", " ", -1)
-	fixedTownFilter := strings.Replace(townFilter, "+", " ", -1)
+	priceNumFilter, _ := strconv.Atoi(options.PriceFilter)
+	
+	fOptions := fixedFilterOptions {
+		TownFilter: strings.Replace(options.TownFilter, "+", " ", -1),
+		FlatTypeFilter: strings.Replace(options.FlatTypeFilter, "+", " ", -1),
+		PriceFilter: priceNumFilter,
+	}
 	
 	// convert to arr
-	recordList := createRecordList(data, fixedTownFilter, fixedFlatTypeFilter, priceNumFilter)
+	recordList := createRecordList(data, fOptions)
 	
 	return recordList
 }
 
 // convert csv lines to array of structs
-func createRecordList(data [][]string, townFilter string, flatTypeFilter string, priceFilter int) []HDBRecord {
+func createRecordList(data [][]string, options fixedFilterOptions) []HDBRecord {
 	var recordList []HDBRecord
 	for i, line := range data {
 		if i > 0 {
 			var rec HDBRecord
 			for j, field := range line {
+				// match index in array(line) to field to be populated
 				switch j {
 				case 0:
 					rec.Month = field
@@ -69,14 +87,17 @@ func createRecordList(data [][]string, townFilter string, flatTypeFilter string,
 			}
 
 			// filters
-			if (townFilter != "" && rec.Town != townFilter) || 
-			(flatTypeFilter != "" && rec.FlatType != flatTypeFilter) || 
-			(priceFilter != 0 && priceFilter < rec.Price) {
+			if (options.TownFilter != "" && rec.Town != options.TownFilter) || 
+			(options.FlatTypeFilter != "" && rec.FlatType != options.FlatTypeFilter) || 
+			(options.PriceFilter != 0 && options.PriceFilter < rec.Price) {
 				continue
 			}
 
 			recordList = append(recordList, rec)
 		}
 	}
+
+	// return more recent records first
+	slices.Reverse(recordList)
 	return recordList
 }
