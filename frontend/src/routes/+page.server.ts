@@ -3,13 +3,12 @@ import { message, superValidate } from 'sveltekit-superforms'
 import { zod } from 'sveltekit-superforms/adapters'
 import { fail } from '@sveltejs/kit'
 
+// schema for queries
 const schema = z.object({
     month: z.string(),
     town: z.string(),
     flatType: z.string(),
-    model: z.string(),
     leaseStart: z.string(),
-    remainingLease: z.string(),
     price: z.number(),
 })
 

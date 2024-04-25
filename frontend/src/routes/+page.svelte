@@ -29,7 +29,7 @@
 	// TABLE/PAGINATION
     let paginationSettings = {
         page: 0,
-        limit: 10,
+        limit: 5,
         size: records?.length,
         amounts: [3, 5, 10, 15]
     } satisfies PaginationSettings
@@ -61,6 +61,9 @@
             backgroundColor: '#DCC7EA',
 		}],
 	}
+
+	$: meanMinY = parseFloat((Math.min(...meanData) * 0.9).toPrecision(2))
+	$: countMinY = parseInt((Math.min(...countData) * 0.8).toPrecision(2))
 </script>
 
 <div class="w-full min-h-screen flex justify-center flex-col gap-4 items-center">
@@ -94,10 +97,10 @@
 	{#if JSON.stringify(years) !== JSON.stringify([])}	
 	<div class="flex w-full justify-evenly mb-8">
 		<div class="w-1/3 max-w-[340px] min-h-80">
-			<BarChart data={meanDataSet} />
+			<BarChart data={meanDataSet} minY={meanMinY}/>
 		</div>
 		<div class="w-1/3 max-w-80 min-h-80">
-			<BarChart data={countDataSet} />
+			<BarChart data={countDataSet} minY={countMinY}/>
 		</div>
 	</div>
 	{/if}

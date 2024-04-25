@@ -6,6 +6,7 @@
     Chart.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
     export let data: dataSet
+    export let minY: number
   </script>
   
   <Bar 
@@ -24,9 +25,10 @@
     },
     scales: {
         y: {
+            min: minY,
             ticks: {
                 color: '#DCC7EA'
-            }
+            },
         },
         x: {
             ticks: {
