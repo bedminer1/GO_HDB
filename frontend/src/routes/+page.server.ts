@@ -31,12 +31,17 @@ export const actions = {
 
         const url = `http://127.0.0.1:8080/2017/records?town=${form.data.town}&flat_type=${form.data.flatType}&price=${form.data.price}`
         const response = await fetch(url)
-        const records: HDBRecord[] = await response.json()
+        const data = await response.json() // data in the form of [HDBRecord[], Info]
+
+        const info: Info = data[1]
+        const records: HDBRecord[] = data[0]
+
         message(form, "Query Submitted")
 
         return {
+            records,
+            info,
             form, 
-            records
         }
 
     }

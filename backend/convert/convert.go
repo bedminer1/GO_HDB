@@ -30,7 +30,7 @@ type fixedFilterOptions struct {
 	PriceFilter int
 }
 
-func CsvToJSON(options FilterOptions) []HDBRecord {
+func CsvToJSON(options FilterOptions) []interface{} {
 	// open file
 	f, err := os.Open("convert/input/2017data.csv")
 	if err != nil {
@@ -49,7 +49,7 @@ func CsvToJSON(options FilterOptions) []HDBRecord {
 	
 	// fix filters
 	priceNumFilter, _ := strconv.Atoi(options.PriceFilter)
-	
+
 	fOptions := fixedFilterOptions {
 		TownFilter: strings.Replace(options.TownFilter, "+", " ", -1),
 		FlatTypeFilter: strings.Replace(options.FlatTypeFilter, "+", " ", -1),
@@ -57,16 +57,19 @@ func CsvToJSON(options FilterOptions) []HDBRecord {
 	}
 	
 	// convert to arr
-	recordList := createRecordList(data, fOptions)
+	recordList, stats := createRecordList(data, fOptions)
+	ret := []interface{} {recordList, stats}
 	
-	return recordList
+	return ret
 }
 
 // convert csv lines to array of structs
-func createRecordList(data [][]string, options fixedFilterOptions) []HDBRecord {
+func createRecordList(data [][]string, options fixedFilterOptions) ([]HDBRecord, map[string][]int) {
 	var recordList []HDBRecord
+	meanMap := make(map[string][]int) // eg "2017": [19200 (mean), 23 (count)]
+
 	for i, line := range data {
-		if i > 0 {
+		if i > 0 { // ignore header line
 			var rec HDBRecord
 			for j, field := range line {
 				// match index in array(line) to field to be populated
@@ -94,10 +97,26 @@ func createRecordList(data [][]string, options fixedFilterOptions) []HDBRecord {
 			}
 
 			recordList = append(recordList, rec)
+
+			// updating mean
+			year := rec.Month[:4]
+			_, ok := meanMap[year]
+			if !ok {
+				meanMap[year] = []int{0, 0}
+			}
+			data := meanMap[year]
+			mean, count := data[0], data[1]
+			newMean := findMean(mean, count, rec.Price)
+			meanMap[year] = []int{newMean, count + 1}
 		}
 	}
 
 	// return more recent records first
 	slices.Reverse(recordList)
-	return recordList
+	return recordList, meanMap
+}
+
+// findMean takes old mean, old count, new value and returns the mean
+func findMean(oldMean int, oldCount int, newValue int) int {
+	return (oldMean * oldCount + newValue) / (oldCount + 1)
 }

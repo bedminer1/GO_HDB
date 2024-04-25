@@ -11,7 +11,14 @@
 	export const snapshot = { capture, restore }
 	export let form
 	let records: HDBRecord[] = []
-	$: if (form) records = form.records!
+	let info: Info
+	$: {
+		if (form) {
+			records = form.records!
+			info = form.info!
+			console.log(records)
+		}
+	} 
 
 	// PAGINATION
     let paginationSettings = {
@@ -32,6 +39,8 @@
 </script>
 
 <div class="w-full h-screen flex justify-center flex-col gap-4 items-center">
+	<!-- <button on:click={() => console.log(form?.records)}>l</button> -->
+	<p>{JSON.stringify(info)}</p>
 	<form method="POST" action="?/query" use:enhance>
 		<label>
 			<span></span>

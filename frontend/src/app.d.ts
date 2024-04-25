@@ -16,3 +16,5 @@ interface HDBRecord {
     remainingLease: string
     price: number
 }
+
+type Info = Map<string, number[]>
