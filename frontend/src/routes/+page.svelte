@@ -36,7 +36,8 @@
 
     $: paginationSettings.size = records?.length
 
-    $: paginatedSource = records.slice(
+	let paginatedSource: HDBRecord[]
+    $: if (records) paginatedSource = records.slice(
         paginationSettings.page * paginationSettings.limit,
         paginationSettings.page * paginationSettings.limit + paginationSettings.limit
     );
@@ -134,6 +135,8 @@
 				controlVariant="focus:bg-secondary-500"
 			/>
 	</div>
+	{:else if $message && !form?.records}
+		<h2>No Results Found...</h2>
 	{/if}
 </div>
 
