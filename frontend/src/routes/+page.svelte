@@ -64,7 +64,7 @@
 </script>
 
 <div class="w-full min-h-screen flex justify-center flex-col gap-4 items-center">
-	<form method="POST" action="?/query" use:enhance class="w-1/2 flex justify-center gap-2">
+	<form method="POST" action="?/query" use:enhance class="w-1/2 text-center flex justify-center gap-2 mb-8">
 		<label>
 			<span>Town</span>
 			<input class="input" type="text" name="town" bind:value={$sf.town} placeholder="Town">
@@ -92,11 +92,11 @@
 	{#if $message}<p>{$message}</p>{/if}
 
 	{#if JSON.stringify(years) !== JSON.stringify([])}	
-	<div class="flex w-full gap-10 p-10 justify-center">
-		<div class="w-1/3 h-1/3">
+	<div class="flex w-full justify-evenly mb-8">
+		<div class="w-1/3 max-w-[340px] min-h-80">
 			<BarChart data={meanDataSet} />
 		</div>
-		<div class="w-1/3 h-1/3">
+		<div class="w-1/3 max-w-80 min-h-80">
 			<BarChart data={countDataSet} />
 		</div>
 	</div>

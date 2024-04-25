@@ -14,6 +14,7 @@
   height={4}
   options={{
     animations: false,
+    maintainAspectRatio: false,
     plugins: {
         legend: {
             labels: {
