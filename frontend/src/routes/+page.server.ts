@@ -5,8 +5,8 @@ import { fail } from '@sveltejs/kit'
 
 const schema = z.object({
     month: z.string(),
-    town: z.string().default("BEDOK"),
-    flatType: z.string().default("2+ROOM"),
+    town: z.string().min(1),
+    flatType: z.string().min(1),
     leaseStart: z.string(),
     remainingLease: z.string(),
     price: z.number(),
