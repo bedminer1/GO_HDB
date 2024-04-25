@@ -11,9 +11,9 @@ import (
 type HDBRecord struct {
 	Month string `json:"month"`
 	Town string `json:"town"`
-	FlatType string `json:"flat_type"`
-	LeaseStart string `json:"lease_start"`
-	RemainingLease string `json:"remaining_lease"`
+	FlatType string `json:"flatType"`
+	LeaseStart string `json:"leaseStart"`
+	RemainingLease string `json:"remainingLease"`
 	Price int `json:"price"`
 }
 

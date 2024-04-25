@@ -9,7 +9,8 @@
 
 	export const snapshot = { capture, restore }
 	export let form
-
+	let records: HDBRecord[] = []
+	$: if (form) records = form.records!
 
 
 </script>
@@ -33,4 +34,32 @@
 	</label>
 	<button class="btn" type="submit">Submit</button>
 </form>
+
+{#if form?.records}
+<div>
+	<table class="table w-2/3">
+		<thead>
+			<th>Month</th>
+			<th>Town</th>
+			<th>Flat Type</th>
+			<th>Lease Start Year</th>
+			<th>Remaining Lease</th>
+			<th>Resale Price</th>
+		</thead>
+		<tbody>
+			{#each form.records as record}
+				<tr>
+					<td>{record.month}</td>
+					<td>{record.town}</td>
+					<td>{record.flatType}</td>
+					<td>{record.leaseStart}</td>
+					<td>{record.remainingLease}</td>
+					<td>{record.price}</td>
+				</tr>
+
+			{/each}
+		</tbody>
+	</table>
+</div>
+{/if}
 
