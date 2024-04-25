@@ -12,6 +12,7 @@ interface HDBRecord {
 	month: string
     town: string
     flatType: string
+    model: string
     leaseStart: string
     remainingLease: string
     price: number
@@ -25,4 +26,8 @@ interface dataSet {
         borderWidth: number;
         backgroundColor: string;
     }[];
+}
+
+interface Stats {
+    [key: string]: number[]
 }

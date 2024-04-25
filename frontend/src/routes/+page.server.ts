@@ -7,6 +7,7 @@ const schema = z.object({
     month: z.string(),
     town: z.string().min(1),
     flatType: z.string().min(1),
+    model: z.string(),
     leaseStart: z.string(),
     remainingLease: z.string(),
     price: z.number(),
@@ -29,13 +30,16 @@ export const actions = {
             return fail(400, { form });
         }
 
-        const url = `http://127.0.0.1:8080/2017/records?town=${form.data.town}&flat_type=${form.data.flatType}&price=${form.data.price}`
-        const response = await fetch(url)
-        const data = await response.json() // data in the form of [HDBRecord[], Info]
+        // fetch from go endpoint
+        const BASEURL = "http://127.0.0.1:8080/2017/records"
+        const QUERYPARAMS = `?town=${form.data.town}&flat_type=${form.data.flatType}&price=${form.data.price}`
+        const response = await fetch(BASEURL + QUERYPARAMS)
+        const data = await response.json() // data in the form of [HDBRecord[], Stats]
 
-        const info: {[key: string]: number[]} = data[1]
+        const info: Stats = data[1]
         const records: HDBRecord[] = data[0]
 
+        // reordering info into arrays of years, meanData and countData
         let years: string[] = []
         let meanData: number[] = []
         let countData: number[] = []

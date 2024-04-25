@@ -107,6 +107,7 @@
 				<th>Month</th>
 				<th>Town</th>
 				<th>Flat Type</th>
+				<th>Model</th>
 				<th>Lease Start Year</th>
 				<th>Remaining Lease</th>
 				<th>Resale Price</th>
@@ -117,6 +118,7 @@
 						<td>{record.month}</td>
 						<td>{record.town}</td>
 						<td>{record.flatType}</td>
+						<td>{record.model}</td>
 						<td>{record.leaseStart}</td>
 						<td>{record.remainingLease}</td>
 						<td>{record.price}</td>

@@ -13,6 +13,7 @@ type HDBRecord struct {
 	Month string `json:"month"`
 	Town string `json:"town"`
 	FlatType string `json:"flatType"`
+	Model string `json:"model"`
 	LeaseStart string `json:"leaseStart"`
 	RemainingLease string `json:"remainingLease"`
 	Price int `json:"price"`
@@ -80,6 +81,8 @@ func createRecordList(data [][]string, options fixedFilterOptions) ([]HDBRecord,
 					rec.Town = field
 				case 2: 
 					rec.FlatType = field
+				case 7:
+					rec.Model = field
 				case 8:
 					rec.LeaseStart = field
 				case 9:

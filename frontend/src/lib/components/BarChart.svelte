@@ -1,23 +1,9 @@
 <script lang="ts">
+    // @ts-nocheck
     import { Bar } from 'svelte-chartjs';
-    import {
-      Chart,
-      Title,
-      Tooltip,
-      Legend,
-      BarElement,
-      CategoryScale,
-      LinearScale,
-    } from 'chart.js';
+    import {Chart, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale} from 'chart.js';
   
-    Chart.register(
-      Title,
-      Tooltip,
-      Legend,
-      BarElement,
-      CategoryScale,
-      LinearScale
-    );
+    Chart.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
     export let data: dataSet
   </script>
@@ -27,6 +13,7 @@
   width={5}
   height={4}
   options={{
+    animations: false,
     plugins: {
         legend: {
             labels: {

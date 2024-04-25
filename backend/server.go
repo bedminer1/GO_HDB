@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/bedminer1/hdb_project/convert"
 	"github.com/labstack/echo/v4"
 )
@@ -21,6 +19,6 @@ func main() {
 		return c.JSON(200, convert.CsvToJSON(options))
 	})
 
-	fmt.Println("Server started on port 8080")
+	e.Logger.Print("Listening on port :8080")
 	e.Logger.Fatal(e.Start(":8080"))
 }
