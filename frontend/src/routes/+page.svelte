@@ -51,14 +51,28 @@
             backgroundColor: '#DCC7EA',
 		}],
 	}
+	$: countDataSet = {
+		labels: years,
+		datasets: [{
+			label: "Number of Listings",
+			data: countData,
+			borderWidth: 1,
+            backgroundColor: '#DCC7EA',
+		}],
+	}
 </script>
 
-<div class="w-full h-screen flex justify-center flex-col gap-4 items-center">
-	<!-- <button on:click={() => console.log(form?.records)}>l</button> -->
-	<div class="w-1/2 h-1/2">
-		<BarChart data={meanDataSet} />
+<div class="w-full min-h-screen flex justify-center flex-col gap-4 items-center">
+	{#if JSON.stringify(years) !== JSON.stringify([])}	
+	<div class="flex w-full ">
+		<div class="w-1/2 h-1/2">
+			<BarChart data={meanDataSet} />
+		</div>
+		<div class="w-1/2 h-1/2">
+			<BarChart data={countDataSet} />
+		</div>
 	</div>
-	<p>{JSON.stringify(years)}</p>
+	{/if}
 	<form method="POST" action="?/query" use:enhance>
 		<label>
 			<span></span>

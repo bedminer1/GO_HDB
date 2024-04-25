@@ -33,7 +33,7 @@ export const actions = {
         const response = await fetch(url)
         const data = await response.json() // data in the form of [HDBRecord[], Info]
 
-        const info: Map<string, number[]> = data[1]
+        const info: {[key: string]: number[]} = data[1]
         const records: HDBRecord[] = data[0]
 
         let years: string[] = []
