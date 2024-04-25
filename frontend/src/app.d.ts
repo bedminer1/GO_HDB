@@ -17,8 +17,6 @@ interface HDBRecord {
     price: number
 }
 
-type Info = Map<string, number[]>
-
 interface dataSet {
     labels: string[];
     datasets: {

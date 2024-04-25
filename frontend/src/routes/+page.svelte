@@ -4,19 +4,25 @@
     import type { PaginationSettings } from '@skeletonlabs/skeleton'
 	import BarChart from '$lib/components/BarChart.svelte'
 
+	// SUPERFORM INIT
 	export let data
-	const { form: sf, enhance, reset, capture, restore, message, errors } = superForm(data.form, {
+	const { form: sf, enhance, capture, restore, message, errors } = superForm(data.form, {
 		resetForm: false
 	})
-
 	export const snapshot = { capture, restore }
+
+	// DATA FROM QUERY
 	export let form
 	let records: HDBRecord[] = []
-	let info: Info
+	let years: string[] = []
+	let meanData: number[] = []
+	let countData: number[] = []
 	$: {
 		if (form) {
 			records = form.records!
-			info = form.info!
+			years = form.years!
+			meanData = form.meanData!
+			countData = form.countData!
 		}
 	} 
 
@@ -24,11 +30,11 @@
     let paginationSettings = {
         page: 0,
         limit: 10,
-        size: records.length,
+        size: records?.length,
         amounts: [3, 5, 10, 15]
     } satisfies PaginationSettings
 
-    $: paginationSettings.size = records.length
+    $: paginationSettings.size = records?.length
 
     $: paginatedSource = records.slice(
         paginationSettings.page * paginationSettings.limit,
@@ -36,11 +42,11 @@
     );
 
 	// CHART
-	$: meanData = {
-		labels: [],
+	$: meanDataSet = {
+		labels: years,
 		datasets: [{
 			label: "Annual Mean",
-			data: [],
+			data: meanData,
 			borderWidth: 1,
             backgroundColor: '#DCC7EA',
 		}],
@@ -49,10 +55,10 @@
 
 <div class="w-full h-screen flex justify-center flex-col gap-4 items-center">
 	<!-- <button on:click={() => console.log(form?.records)}>l</button> -->
-	<p>{JSON.stringify(info)}</p>
-	<div>
-		<BarChart data={meanData} />
+	<div class="w-1/2 h-1/2">
+		<BarChart data={meanDataSet} />
 	</div>
+	<p>{JSON.stringify(years)}</p>
 	<form method="POST" action="?/query" use:enhance>
 		<label>
 			<span></span>

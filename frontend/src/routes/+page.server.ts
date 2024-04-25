@@ -33,14 +33,25 @@ export const actions = {
         const response = await fetch(url)
         const data = await response.json() // data in the form of [HDBRecord[], Info]
 
-        const info: Info = data[1]
+        const info: Map<string, number[]> = data[1]
         const records: HDBRecord[] = data[0]
+
+        let years: string[] = []
+        let meanData: number[] = []
+        let countData: number[] = []
+        for (const [year, data] of Object.entries(info)) {
+			years = [...years, year]
+			meanData = [...meanData, data[0]]
+			countData = [...countData, data[1]]
+		}
 
         message(form, "Query Submitted")
 
         return {
             records,
-            info,
+            years,
+            meanData,
+            countData,
             form, 
         }
 
