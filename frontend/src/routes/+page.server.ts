@@ -5,8 +5,8 @@ import { fail } from '@sveltejs/kit'
 
 const schema = z.object({
     month: z.string(),
-    town: z.string().min(1),
-    flatType: z.string().min(1),
+    town: z.string(),
+    flatType: z.string(),
     model: z.string(),
     leaseStart: z.string(),
     remainingLease: z.string(),
@@ -30,9 +30,9 @@ export const actions = {
             return fail(400, { form });
         }
 
-        // fetch from go endpoint
+        // fetch from go
         const BASEURL = "http://127.0.0.1:8080/2017/records"
-        const QUERYPARAMS = `?town=${form.data.town}&flat_type=${form.data.flatType}&price=${form.data.price}`
+        const QUERYPARAMS = `?town=${form.data.town.replace(' ', '+').toUpperCase()}&flat_type=${form.data.flatType.replace(' ', '+').toUpperCase()}&price=${form.data.price * 1000}`
         const response = await fetch(BASEURL + QUERYPARAMS)
         const data = await response.json() // data in the form of [HDBRecord[], Stats]
 
@@ -49,7 +49,7 @@ export const actions = {
 			countData = [...countData, data[1]]
 		}
 
-        message(form, "Query Submitted")
+        message(form, `Results for ${form.data.flatType} @${form.data.town}`)
 
         return {
             records,
