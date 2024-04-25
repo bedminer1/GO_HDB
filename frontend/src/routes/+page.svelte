@@ -31,61 +31,65 @@
 
 </script>
 
-<form method="POST" action="?/query" use:enhance>
-	<label>
-		<span></span>
-		<input class="input w-1/2" type="text" name="town" bind:value={$sf.town}>
-		{#if $errors.town}
-			<span>{$errors.town}</span>
-		{/if}
-	</label>
-	<label>
-		<span></span>
-		<input class="input w-1/2" type="text" name="flatType" bind:value={$sf.flatType}>
-		{#if $errors.flatType}
-			<span>{$errors.flatType}</span>
-		{/if}
-	</label>
-	<label>
-		<span></span>
-		<input class="input w-1/2" type="text" name="price" bind:value={$sf.price}>
-		{#if $errors.price}
-			<span>{$errors.price}</span>
-		{/if}
-	</label>
-	<button class="btn" type="submit">Submit</button>
-</form>
-
-{#if $message}<p>{$message}</p>{/if}
-
-{#if form?.records}
-<div>
-	<table class="table w-2/3">
-		<thead>
-			<th>Month</th>
-			<th>Town</th>
-			<th>Flat Type</th>
-			<th>Lease Start Year</th>
-			<th>Remaining Lease</th>
-			<th>Resale Price</th>
-		</thead>
-		<tbody>
-			{#each paginatedSource as record}
-				<tr>
-					<td>{record.month}</td>
-					<td>{record.town}</td>
-					<td>{record.flatType}</td>
-					<td>{record.leaseStart}</td>
-					<td>{record.remainingLease}</td>
-					<td>{record.price}</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
-
-	<Paginator 
-            bind:settings={paginationSettings}
-        />
+<div class="w-full h-screen flex justify-center flex-col gap-4 items-center">
+	<form method="POST" action="?/query" use:enhance>
+		<label>
+			<span></span>
+			<input class="input w-1/2" type="text" name="town" bind:value={$sf.town}>
+			{#if $errors.town}
+				<span>{$errors.town}</span>
+			{/if}
+		</label>
+		<label>
+			<span></span>
+			<input class="input w-1/2" type="text" name="flatType" bind:value={$sf.flatType}>
+			{#if $errors.flatType}
+				<span>{$errors.flatType}</span>
+			{/if}
+		</label>
+		<label>
+			<span></span>
+			<input class="input w-1/2" type="text" name="price" bind:value={$sf.price}>
+			{#if $errors.price}
+				<span>{$errors.price}</span>
+			{/if}
+		</label>
+		<button class="btn" type="submit">Submit</button>
+	</form>
+	
+	{#if $message}<p>{$message}</p>{/if}
+	
+	{#if form?.records}
+	<div class="w-3/4">
+		<table class="table w-full mb-6">
+			<thead>
+				<th>Month</th>
+				<th>Town</th>
+				<th>Flat Type</th>
+				<th>Lease Start Year</th>
+				<th>Remaining Lease</th>
+				<th>Resale Price</th>
+			</thead>
+			<tbody>
+				{#each paginatedSource as record}
+					<tr>
+						<td>{record.month}</td>
+						<td>{record.town}</td>
+						<td>{record.flatType}</td>
+						<td>{record.leaseStart}</td>
+						<td>{record.remainingLease}</td>
+						<td>{record.price}</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	
+		<Paginator 
+				bind:settings={paginationSettings}
+				showFirstLastButtons={true}
+				controlVariant="focus:bg-secondary-500"
+			/>
+	</div>
+	{/if}
 </div>
-{/if}
 
