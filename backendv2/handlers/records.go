@@ -1,17 +1,20 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/bedminer1/echoserver/dbiface"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
+
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gopkg.in/go-playground/validator.v9"
 )
 
-// var (
-// 	v = validator.New()
-// )
+var (
+	v = validator.New()
+)
 
 // HDBRecord contains data of a HDB resale unit
 type HDBRecord struct {
@@ -31,16 +34,58 @@ type RecordHandler struct {
 	Col dbiface.CollectionAPI
 }
 
-// ProductValidator class with validate method
+// RecordValidator class with validate method
 type RecordValidator struct {
 	validator *validator.Validate
 }
 
-// Validate method that validates a product
+// Validate method that validates a record
 func (record *RecordValidator) Validate(i interface{}) error {
 	return record.validator.Struct(i)
 }
 
 func (h *RecordHandler) GetRecords(c echo.Context) error {
 	return c.JSON(http.StatusOK, "get")
+}
+
+// insertProducts generates IDs and inserts products into mongo col
+func insertRecords(ctx context.Context, records []HDBRecord, collection dbiface.CollectionAPI) ([]interface{}, error) {
+	var insertedIds []interface{}
+	for _, record := range records {
+		record.ID = primitive.NewObjectID()
+		insertID, err := collection.InsertOne(ctx, record)
+		if err != nil {
+			log.Errorf("Unable to insert %v", err)
+			return nil, err
+		}
+		insertedIds = append(insertedIds, insertID.InsertedID)
+	}
+	return insertedIds, nil
+}
+
+// CreateRecords create records on mongodb and responds with IDs of records
+func (h *RecordHandler) CreateRecords(c echo.Context) error {
+	var records []HDBRecord
+	c.Echo().Validator = &RecordValidator{validator: v}
+
+	// bind echoContext to records
+	if err := c.Bind(&records); err != nil {
+		log.Errorf("Unable to bind: %v", err)
+		return err
+	}
+
+	// validate records
+	for _, record := range records {
+		if err := c.Validate(record); err != nil {
+			log.Errorf("Unable to validate record %+v, %v", record, err)
+			return err
+		}
+	}
+
+	IDs, err := insertRecords(context.Background(), records, h.Col)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, IDs)
 }

@@ -70,6 +70,7 @@ func main () {
 
 	// HANDLERS
 	e.GET("/records", h.GetRecords)
+	e.POST("/records", h.CreateRecords)
 
 	// START SERVER
 	e.Logger.Infof("Listening on %s:%s", cfg.Host, cfg.Port)
