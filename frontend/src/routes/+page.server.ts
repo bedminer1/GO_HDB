@@ -9,7 +9,7 @@ const schema = z.object({
     town: z.string(),
     flatType: z.string(),
     leaseStart: z.string(),
-    price: z.number(),
+    price: z.number().default(20),
 })
 
 export const load = async () => {
@@ -31,7 +31,7 @@ export const actions = {
 
         // fetch from go
         const BASEURL = "http://127.0.0.1:8080/records"
-        const QUERYPARAMS = `?town=${form.data.town.replace(' ', '+').toUpperCase()}&flatType=${form.data.flatType.replace(' ', '+').toUpperCase()}`
+        const QUERYPARAMS = `?town=${form.data.town.replace(' ', '+').toUpperCase()}&flatType=${form.data.flatType.replace(' ', '+').toUpperCase()}&price=${form.data.price * 100000}`
         const response = await fetch(BASEURL + QUERYPARAMS)
         const data = await response.json() // data in the form of [HDBRecord[], Stats]
 

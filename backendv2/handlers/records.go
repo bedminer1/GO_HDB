@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/bedminer1/echoserver/dbiface"
 	"github.com/labstack/echo/v4"
@@ -53,17 +54,15 @@ func (record *RecordValidator) Validate(i interface{}) error {
 func findRecords(ctx context.Context, q url.Values, collection dbiface.CollectionAPI) ([]HDBRecord, map[string][]int, error) {
 	var records []HDBRecord
 	stats := make(map[string][]int)
-	// TODO get stats
-	stats["2020"] = []int{20, 20}
-	stats["2019"] = []int{20, 20}
-	stats["2018"] = []int{20, 20}
-	stats["2017"] = []int{20, 20}
-	stats["2016"] = []int{20, 20}
-	stats["2015"] = []int{20, 20}
 
 	// filter is a map of query param keys to query param values
 	filter := make(map[string]interface{})
 	for k, v := range q { // setting first value as value (simplified implementation)
+		if k == "price" || k == "leaseStart" || k == "floorArea" {
+			value, _ := strconv.Atoi(v[0])
+			filter[k] = bson.D{{Key: "$lt", Value: value}}
+			continue
+		}
 		filter[k] = v[0]
 	}
 
@@ -75,6 +74,11 @@ func findRecords(ctx context.Context, q url.Values, collection dbiface.Collectio
 		}
 		filter["_id"] = docID
 	}
+	
+	// Sorting by price
+	// sort := bson.D{{Key: "price", Value: 1}}
+	// opts := options.Find().SetSort(sort)
+	
 
 	// cursor is a a list of cursors to items in the db that match filter
 	cursor, err := collection.Find(ctx, bson.M(filter))
@@ -87,7 +91,27 @@ func findRecords(ctx context.Context, q url.Values, collection dbiface.Collectio
 		log.Errorf("Unable to read cursor: %v", err)
 		return records, stats, err
 	}
+
+	// Updating mean
+	for _, record := range records {
+		year := record.Month[:4]
+			_, ok := stats[year]
+			if !ok {
+				stats[year] = []int{0, 0}
+			}
+			data := stats[year]
+			mean, count := data[0], data[1]
+			newMean := findMean(mean, count, record.Price)
+			stats[year] = []int{newMean, count + 1}
+	}
+
+
 	return records, stats, nil
+}
+
+// findMean takes old mean, old count, new value and returns the mean
+func findMean(oldMean int, oldCount int, newValue int) int {
+	return (oldMean * oldCount + newValue) / (oldCount + 1)
 }
 
 // GetRecords is a HandlerFunc that responds with a list of records
