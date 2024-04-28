@@ -13,7 +13,8 @@ interface HDBRecord {
     town: string
     flatType: string
     model: string
-    leaseStart: string
+    floorArea: number
+    leaseStart: number
     remainingLease: string
     price: number
 }

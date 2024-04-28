@@ -46,7 +46,7 @@
 	$: meanDataSet = {
 		labels: years,
 		datasets: [{
-			label: "Annual Mean",
+			label: "Annual Mean Price",
 			data: meanData,
 			borderWidth: 1,
             backgroundColor: '#DCC7EA',
@@ -113,6 +113,7 @@
 				<th>Town</th>
 				<th>Flat Type</th>
 				<th>Model</th>
+				<th>Floor Area</th>
 				<th>Lease Start Year</th>
 				<th>Remaining Lease</th>
 				<th>Resale Price</th>
@@ -124,6 +125,7 @@
 						<td>{record.town}</td>
 						<td>{record.flatType}</td>
 						<td>{record.model}</td>
+						<td>{record.floorArea}</td>
 						<td>{record.leaseStart}</td>
 						<td>{record.remainingLease}</td>
 						<td>{record.price}</td>
@@ -139,7 +141,7 @@
 			/>
 	</div>
 	{:else if $message && !form?.records}
-		<h2>No Results Found...</h2>
+		<h2>No Results Found :-/ </h2>
 	{/if}
 </div>
 

@@ -31,8 +31,19 @@ export const actions = {
 
         // fetch from go
         const BASEURL = "http://127.0.0.1:8080/records"
-        const QUERYPARAMS = `?town=${form.data.town.replace(' ', '+').toUpperCase()}&flatType=${form.data.flatType.replace(' ', '+').toUpperCase()}&price=${form.data.price * 100000}`
-        const response = await fetch(BASEURL + QUERYPARAMS)
+        let queryParamsArr: string[] = []
+        if (form.data.town !== "") {
+            queryParamsArr = [...queryParamsArr, `town=${form.data.town.replace(' ', '+').toUpperCase()}` ]
+        }
+        if (form.data.flatType !== "") {
+            queryParamsArr = [...queryParamsArr, `flatType=${form.data.flatType.replace(' ', '+').toUpperCase()}` ]
+        }
+        if (form.data.price !== 0) {
+            queryParamsArr = [...queryParamsArr, `price=${form.data.price * 100000}` ]
+        }
+        const QUERYPARAMS = queryParamsArr.join("&")
+
+        const response = await fetch(BASEURL + "?" + queryParamsArr.join("&"))
         const data = await response.json() // data in the form of [HDBRecord[], Stats]
 
         
