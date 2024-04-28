@@ -2,11 +2,7 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
-	"os"
 
 	"github.com/bedminer1/echoserver/dbiface"
 	"github.com/labstack/echo/v4"
@@ -72,22 +68,6 @@ func (h *RecordHandler) CreateRecords(c echo.Context) error {
 	var records []HDBRecord
 	c.Echo().Validator = &RecordValidator{validator: v}
 
-
-	//TEMPORARY CODE
-	jsonFile, err := os.Open("handlers/big_marhsall.json")
-	// if we os.Open returns an error then handle it
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	// defer the closing of our jsonFile so that we can parse it later on
-	defer jsonFile.Close()
-
-	byteValue, _ := io.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &records)
-
-	//
-
 	// bind echoContext to records
 	if err := c.Bind(&records); err != nil {
 		log.Errorf("Unable to bind: %v", err)
@@ -102,6 +82,9 @@ func (h *RecordHandler) CreateRecords(c echo.Context) error {
 		}
 	}
 
+	// jsonFileRead insert here
+	// readJsonFileWriteRecords(&records)
+
 	IDs, err := insertRecords(context.Background(), records, h.Col)
 	if err != nil {
 		return err
@@ -109,3 +92,17 @@ func (h *RecordHandler) CreateRecords(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, IDs)
 }
+
+// Read from jsonFile and write to records 
+// func readJsonFileWriteRecords(records *[]HDBRecord) {
+// 	selectedYear := "2015"
+// 	jsonFile, err := os.Open(fmt.Sprintf("data/%s.json", selectedYear))
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+
+// 	defer jsonFile.Close()
+
+// 	byteValue, _ := io.ReadAll(jsonFile)
+// 	json.Unmarshal(byteValue, &records)
+// }	

@@ -2,6 +2,7 @@ package convert
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"os"
 	"slices"
@@ -33,8 +34,9 @@ type fixedFilterOptions struct {
 }
 
 func CsvToJSON(options FilterOptions) []interface{} {
+	selectedYear := "2015"
 	// open file
-	f, err := os.Open("convert/input/2017data.csv")
+	f, err := os.Open(fmt.Sprintf("convert/input/%sdata.csv", selectedYear))
 	if err != nil {
 		fmt.Printf("Failed to open file: %v", err)
 	}
@@ -66,8 +68,8 @@ func CsvToJSON(options FilterOptions) []interface{} {
 	
 
 	// code to write into a json file
-	// j, _ := json.MarshalIndent(recordList, "", "  ")
-	// os.WriteFile("big_marhsall.json", j, os.ModePerm)
+	j, _ := json.MarshalIndent(recordList, "", "  ")
+	os.WriteFile(fmt.Sprintf("%s.json", selectedYear), j, os.ModePerm)
 
 	return ret
 }
