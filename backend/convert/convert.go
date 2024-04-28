@@ -2,7 +2,6 @@ package convert
 
 import (
 	"encoding/csv"
-	"encoding/json"
 	"fmt"
 	"os"
 	"slices"
@@ -68,8 +67,8 @@ func CsvToJSON(options FilterOptions) []interface{} {
 	
 
 	// code to write into a json file
-	j, _ := json.MarshalIndent(recordList, "", "  ")
-	os.WriteFile(fmt.Sprintf("%s.json", selectedYear), j, os.ModePerm)
+	// j, _ := json.MarshalIndent(recordList, "", "  ")
+	// os.WriteFile(fmt.Sprintf("%s.json", selectedYear), j, os.ModePerm)
 
 	return ret
 }

@@ -3,11 +3,13 @@ package handlers
 import (
 	"context"
 	"net/http"
+	"net/url"
 
 	"github.com/bedminer1/echoserver/dbiface"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -44,11 +46,64 @@ func (record *RecordValidator) Validate(i interface{}) error {
 	return record.validator.Struct(i)
 }
 
-func (h *RecordHandler) GetRecords(c echo.Context) error {
-	return c.JSON(http.StatusOK, "get")
+
+//HANDLERS
+
+// findRecords will look for records in the db that match the query params
+func findRecords(ctx context.Context, q url.Values, collection dbiface.CollectionAPI) ([]HDBRecord, map[string][]int, error) {
+	var records []HDBRecord
+	stats := make(map[string][]int)
+	// TODO get stats
+	stats["2020"] = []int{20, 20}
+	stats["2019"] = []int{20, 20}
+	stats["2018"] = []int{20, 20}
+	stats["2017"] = []int{20, 20}
+	stats["2016"] = []int{20, 20}
+	stats["2015"] = []int{20, 20}
+
+	// filter is a map of query param keys to query param values
+	filter := make(map[string]interface{})
+	for k, v := range q { // setting first value as value (simplified implementation)
+		filter[k] = v[0]
+	}
+
+	// changing id from type string to type primitive.ObjectID
+	if filter["_id"] != nil { 
+		docID, err := primitive.ObjectIDFromHex(filter["_id"].(string))
+		if err != nil {
+			return records, stats, err
+		}
+		filter["_id"] = docID
+	}
+
+	// cursor is a a list of cursors to items in the db that match filter
+	cursor, err := collection.Find(ctx, bson.M(filter))
+	if err != nil {
+		log.Errorf("Unable to find records: %v", err)
+		return records, stats, err
+	}
+	// All will write items pointed to by cursor into the records slice
+	if err := cursor.All(ctx, &records); err != nil {
+		log.Errorf("Unable to read cursor: %v", err)
+		return records, stats, err
+	}
+	return records, stats, nil
 }
 
-// insertProducts generates IDs and inserts products into mongo col
+// GetRecords is a HandlerFunc that responds with a list of records
+func (h *RecordHandler) GetRecords(c echo.Context) error {
+	records, stats, err := findRecords(context.Background(), c.QueryParams(), h.Col)
+	if err != nil {
+		return err
+	}
+
+
+	ret := []interface{} {records, stats}
+
+	return c.JSON(http.StatusOK, ret)
+}
+
+// insertRecords generates IDs and inserts records into mongo col
 func insertRecords(ctx context.Context, records []HDBRecord, collection dbiface.CollectionAPI) ([]interface{}, error) {
 	var insertedIds []interface{}
 	for _, record := range records {
