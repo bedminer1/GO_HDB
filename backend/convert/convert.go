@@ -13,8 +13,9 @@ type HDBRecord struct {
 	Month string `json:"month"`
 	Town string `json:"town"`
 	FlatType string `json:"flatType"`
+	FloorArea int `json:"floorArea" bson:"floorArea"`
 	Model string `json:"model"`
-	LeaseStart string `json:"leaseStart"`
+	LeaseStart int `json:"leaseStart"`
 	RemainingLease string `json:"remainingLease"`
 	Price int `json:"price"`
 }
@@ -57,10 +58,17 @@ func CsvToJSON(options FilterOptions) []interface{} {
 		PriceFilter: priceNumFilter,
 	}
 	
+
+	
 	// convert to arr
 	recordList, stats := createRecordList(data, fOptions)
 	ret := []interface{} {recordList, stats}
 	
+
+	// code to write into a json file
+	// j, _ := json.MarshalIndent(recordList, "", "  ")
+	// os.WriteFile("big_marhsall.json", j, os.ModePerm)
+
 	return ret
 }
 
@@ -81,10 +89,12 @@ func createRecordList(data [][]string, options fixedFilterOptions) ([]HDBRecord,
 					rec.Town = field
 				case 2: 
 					rec.FlatType = field
+				case 6: 
+					rec.FloorArea, _ = strconv.Atoi(field)
 				case 7:
 					rec.Model = field
 				case 8:
-					rec.LeaseStart = field
+					rec.LeaseStart, _ = strconv.Atoi(field)
 				case 9:
 					rec.RemainingLease = field
 				case 10:

@@ -2,7 +2,11 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
 	"net/http"
+	"os"
 
 	"github.com/bedminer1/echoserver/dbiface"
 	"github.com/labstack/echo/v4"
@@ -67,6 +71,22 @@ func insertRecords(ctx context.Context, records []HDBRecord, collection dbiface.
 func (h *RecordHandler) CreateRecords(c echo.Context) error {
 	var records []HDBRecord
 	c.Echo().Validator = &RecordValidator{validator: v}
+
+
+	//TEMPORARY CODE
+	jsonFile, err := os.Open("handlers/big_marhsall.json")
+	// if we os.Open returns an error then handle it
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	// defer the closing of our jsonFile so that we can parse it later on
+	defer jsonFile.Close()
+
+	byteValue, _ := io.ReadAll(jsonFile)
+	json.Unmarshal(byteValue, &records)
+
+	//
 
 	// bind echoContext to records
 	if err := c.Bind(&records); err != nil {
