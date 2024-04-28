@@ -67,17 +67,21 @@
 </script>
 
 <div class="w-full min-h-screen flex justify-center flex-col gap-4 items-center">
-	<form method="POST" action="?/query" use:enhance class="w-1/2 text-center flex justify-center gap-2 mb-8">
+	{#if !form?.records}
+	<h1 class="h1 text-7xl mb-12">HDB Stats Tracker</h1>
+	{/if}
+
+	<form method="POST" action="?/query" use:enhance class="w-1/2 text-center grid grid-cols-3 gap-2 mb-8">
 		<label>
 			<span>Town</span>
-			<input class="input" type="text" name="town" bind:value={$sf.town} placeholder="Town">
+			<input class="input" type="text" name="town" bind:value={$sf.town} placeholder="eg. Bedok">
 			{#if $errors.town}
 				<span>{$errors.town}</span>
 			{/if}
 		</label>
 		<label>
 			<span>Flat Type</span>
-			<input class="input" type="text" name="flatType" bind:value={$sf.flatType} placeholder="Flat Type">
+			<input class="input" type="text" name="flatType" bind:value={$sf.flatType} placeholder="eg. 3 room">
 			{#if $errors.flatType}
 				<span>{$errors.flatType}</span>
 			{/if}
@@ -95,7 +99,7 @@
 	{#if $message}<p>{$message}</p>{/if}
 
 	{#if JSON.stringify(years) !== JSON.stringify([])}	
-	<div class="flex w-full justify-evenly mb-8">
+	<div class="flex w-3/4 justify-evenly mb-8">
 		<div class="w-1/3 max-w-[340px] min-h-80">
 			<BarChart data={meanDataSet} minY={meanMinY}/>
 		</div>

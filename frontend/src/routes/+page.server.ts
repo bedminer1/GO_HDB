@@ -9,7 +9,7 @@ const schema = z.object({
     town: z.string(),
     flatType: z.string(),
     leaseStart: z.string(),
-    price: z.number().default(20),
+    price: z.number(),
 })
 
 export const load = async () => {
@@ -41,7 +41,6 @@ export const actions = {
         if (form.data.price !== 0) {
             queryParamsArr = [...queryParamsArr, `price=${form.data.price * 100000}` ]
         }
-        const QUERYPARAMS = queryParamsArr.join("&")
 
         const response = await fetch(BASEURL + "?" + queryParamsArr.join("&"))
         const data = await response.json() // data in the form of [HDBRecord[], Stats]
