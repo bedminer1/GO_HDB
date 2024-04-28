@@ -83,7 +83,7 @@
 			{/if}
 		</label>
 		<label>
-			<span>Max Price (K)</span>
+			<span>Max Price (100k)</span>
 			<input class="input" type="text" name="price" bind:value={$sf.price} placeholder="Max Price">
 			{#if $errors.price}
 				<span>{$errors.price}</span>
