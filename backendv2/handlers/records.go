@@ -58,11 +58,18 @@ func findRecords(ctx context.Context, q url.Values, collection dbiface.Collectio
 	// filter is a map of query param keys to query param values
 	filter := make(map[string]interface{})
 	for k, v := range q { // setting first value as value (simplified implementation)
-		if k == "price" || k == "leaseStart" || k == "floorArea" {
+		if k == "price" {
 			value, _ := strconv.Atoi(v[0])
 			filter[k] = bson.D{{Key: "$lt", Value: value}}
 			continue
 		}
+
+		if k == "leaseStart" || k == "floorArea" {
+			value, _ := strconv.Atoi(v[0])
+			filter[k] = bson.D{{Key: "$gt", Value: value}}
+			continue
+		}
+
 		filter[k] = v[0]
 	}
 

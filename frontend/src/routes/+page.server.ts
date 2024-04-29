@@ -8,7 +8,7 @@ const schema = z.object({
     month: z.string(),
     town: z.string(),
     flatType: z.string(),
-    leaseStart: z.string(),
+    leaseStart: z.number(),
     price: z.number(),
 })
 
@@ -29,17 +29,17 @@ export const actions = {
             return fail(400, { form });
         }
 
-        // fetch from go
+        // FETCH
         const BASEURL = "http://127.0.0.1:8080/records"
         let queryParamsArr: string[] = []
-        if (form.data.town !== "") {
-            queryParamsArr = [...queryParamsArr, `town=${form.data.town.replace(' ', '+').toUpperCase()}` ]
-        }
-        if (form.data.flatType !== "") {
-            queryParamsArr = [...queryParamsArr, `flatType=${form.data.flatType.replace(' ', '+').toUpperCase()}` ]
-        }
-        if (form.data.price !== 0) {
-            queryParamsArr = [...queryParamsArr, `price=${form.data.price * 100000}` ]
+
+        for (const [paramKey, paramVal] of Object.entries(form.data)) {
+            if (typeof paramVal === "string" && paramVal !== "") {
+                queryParamsArr = [...queryParamsArr, `${paramKey}=${paramVal.replace(' ', '+').toUpperCase()}`]
+            }
+            if (typeof paramVal === "number" && paramVal !== 0) {
+                queryParamsArr = [...queryParamsArr, `${paramKey}=${paramVal}`]
+            }
         }
 
         const response = await fetch(BASEURL + "?" + queryParamsArr.join("&"))
@@ -49,7 +49,7 @@ export const actions = {
         const info: Stats = data[1]
         const records: HDBRecord[] = data[0]
         
-        // reordering info into arrays of years, meanData and countData
+        // MASSAGE info into arrays of years, meanData and countData
         let years: string[] = []
         let meanData: number[] = []
         let countData: number[] = []

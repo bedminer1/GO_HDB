@@ -85,7 +85,7 @@
 	<h1 class="h1 text-7xl mb-12">HDB Stats Tracker</h1>
 	{/if}
 
-	<form method="POST" action="?/query" use:enhance class="w-1/2 text-center grid grid-cols-3 gap-2 mb-8">
+	<form method="POST" action="?/query" use:enhance class="w-1/2 text-center grid grid-cols-4 gap-2 mb-8">
 		<label>
 			<span>Town</span>
 			<input class="input" type="text" name="town" bind:value={$sf.town} placeholder="eg. Bedok">
@@ -101,10 +101,17 @@
 			{/if}
 		</label>
 		<label>
-			<span>Max Price (100k)</span>
-			<input class="input" type="text" name="price" bind:value={$sf.price} placeholder="Max Price">
+			<span>Max Price</span>
+			<input class="input" type="text" name="price" bind:value={$sf.price} placeholder="eg. 340000">
 			{#if $errors.price}
 				<span>{$errors.price}</span>
+			{/if}
+		</label>
+		<label>
+			<span>Least Start</span>
+			<input class="input" type="text" name="leaseStart" bind:value={$sf.leaseStart} placeholder="eg. 2010">
+			{#if $errors.leaseStart}
+				<span>{$errors.leaseStart}</span>
 			{/if}
 		</label>
 		<button class="hidden" type="submit">Submit</button>
