@@ -64,7 +64,21 @@
 
 	$: meanMinY = parseFloat((Math.min(...meanData) * 0.9).toPrecision(2))
 	$: countMinY = parseInt((Math.min(...countData) * 0.8).toPrecision(2))
+
+	// NAV SHORTCUT
+	function handleKeydown(key: string) {
+            if (key === 'q' && paginationSettings.page !== 0) {
+                paginationSettings.page--
+            }
+            if (key === " " && paginationSettings.page !== Math.floor(paginationSettings.size / paginationSettings.limit)) {
+                paginationSettings.page++ 
+            }
+        }
 </script>
+
+<svelte:window on:keypress={(event) => {
+    handleKeydown(event.key)
+}}/>   
 
 <div class="w-full min-h-screen flex justify-center flex-col gap-4 items-center">
 	{#if !form?.records}
@@ -143,6 +157,11 @@
 				showFirstLastButtons={true}
 				controlVariant="focus:bg-secondary-500"
 			/>
+	</div>
+	<div class="text-sm w-2/3 flex justify-end">
+		<div class="w-30 text-center">
+			<i>*press Q for prev and<br> spacebar for next</i>
+		</div>
 	</div>
 	{:else if $message && !form?.records}
 		<h2>No Results Found :-/ </h2>
