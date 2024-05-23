@@ -7,6 +7,7 @@ You can search for specific towns and flat types, as well as setting a maximum p
 # Plans
 - Implement resale year and lease start year queries
 - Implement more processed stats, such as top 5 cheapest and most expensive towns, trend analysis
+- multi filter where two locations can be filtered for
 
 # Dev Logs
 - First Golang server, learnt the basics of http and how to send json payloads using http.
